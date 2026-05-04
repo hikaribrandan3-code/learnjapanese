@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-label: "Lexend", sans-serif;
+
+  --color-primary: #864e5a;
+  --color-primary-container: #ffb7c5;
+  --color-secondary: #0c6780;
+  --color-secondary-container: #9ae1ff;
+  --color-tertiary: #705d00;
+  --color-tertiary-container: #edc800;
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-surface-dim: #d9dadb;
+  --color-surface-bright: #f8f9fa;
+  --color-on-background: #191c1d;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #7b4551;
+  --color-outline: #837375;
+  --color-outline-variant: #d6c2c4;
+
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-sans transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply min-h-[64px] rounded-full bg-primary text-on-primary font-bold text-xl flex items-center justify-center shadow-[0px_6px_0px_0px_#6b3743] transform transition-transform active:translate-y-[6px] active:shadow-none hover:brightness-110;
+  }
+  
+  .btn-secondary {
+    @apply min-h-[64px] rounded-full bg-white text-primary font-bold text-xl flex items-center justify-center shadow-[0px_6px_0px_0px_#d6c2c4] transform transition-transform active:translate-y-[6px] active:shadow-none hover:bg-slate-50;
+  }
+
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-md border border-outline-variant/30 rounded-3xl shadow-lg;
+  }
+}
+
+/* Animations from mockup */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.petal-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.petal-float-delayed {
+  animation: float 10s ease-in-out infinite;
+  animation-delay: 2s;
+}

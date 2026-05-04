@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "User Progress",
+      "description": "Stores user learning progress, profile, and app state.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user's unique Firebase Auth ID." },
+        "name": { "type": "string", "description": "Display name." },
+        "avatar": { "type": "string", "description": "URL to avatar image." },
+        "gender": { "type": "string", "enum": ["female", "male"], "description": "User gender for UI theme." },
+        "unlockedLevels": { "type": "number", "description": "Number of levels unlocked." },
+        "hearts": { "type": "number", "description": "Current number of hearts." },
+        "isInfiniteHearts": { "type": "boolean", "description": "Whether infinite hearts are unlocked." },
+        "goals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "target": { "type": "number" },
+              "current": { "type": "number" },
+              "icon": { "type": "string" }
+            }
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "hearts", "isInfiniteHearts", "goals", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProgress",
+      "description": "User progress data indexed by their UID."
+    }
+  }
+}

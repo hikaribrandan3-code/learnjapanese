@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // User Progress Validation
+    function isValidUserProgress(data) {
+      return data.keys().hasAll(['uid', 'name', 'gender', 'unlockedLevels', 'hearts', 'isInfiniteHearts', 'goals', 'updatedAt'])
+        && data.keys().size() == 8
+        && data.uid == request.auth.uid
+        && data.name is string && data.name.size() <= 100
+        && data.gender in ['female', 'male']
+        && data.unlockedLevels is number && data.unlockedLevels >= 1
+        && data.hearts is number && data.hearts >= 0 && data.hearts <= 10
+        && data.isInfiniteHearts is bool
+        && data.goals is list && data.goals.size() <= 10
+        && data.updatedAt == request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserProgress(incoming());
+      allow update: if isOwner(userId) && isValidUserProgress(incoming())
+        && (incoming().diff(existing()).affectedKeys().hasOnly(['name', 'avatar', 'gender', 'unlockedLevels', 'hearts', 'isInfiniteHearts', 'goals', 'updatedAt']));
+    }
+  }
+}
